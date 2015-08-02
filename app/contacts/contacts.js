@@ -19,4 +19,75 @@ angular.module('myContactsApp.contacts', ['ngRoute', 'firebase'])
 		$scope.addFormShow = true;
 	}
 
+	$scope.hide = function(){
+		$scope.addFormShow = false;
+	}
+
+	$scope.clearFields = function(){
+
+		$scope.name = "";
+		$scope.email = ""; 
+		$scope.company = "";
+		$scope.work_phone = "";
+		$scope.mobile_phone = "";
+		$scope.home_phone = "";
+		$scope.street_address = "";
+		$scope.city = "";
+		$scope.state = "";
+		$scope.zip = ""
+
+	}
+
+	$scope.addFormSubmit = function(){
+		console.log('Adding contact...');
+
+		if ($scope.name) { var name = $scope.name } else { name = null; }
+		if ($scope.email) { var email = $scope.email } else { email = null; }
+		if ($scope.company) { var company = $scope.company } else { company = null; }
+		if ($scope.work_phone) { var work_phone = $scope.work_phone } else { work_phone = null; }
+		if ($scope.mobile_phone) { var mobile_phone = $scope.mobile_phone } else { mobile_phone = null; }
+		if ($scope.home_phone) { var home_phone = $scope.home_phone } else { home_phone = null; }
+		if ($scope.street_address) { var street_address = $scope.street_address } else { street_address = null; }
+		if ($scope.city) { var city = $scope.city } else { city = null; }
+		if ($scope.state) { var state = $scope.state } else { state = null; }
+		if ($scope.zip) { var zip = $scope.zip } else { zip = null; }
+
+		//note that $scope.contacts is already linked to firebaseArray via reference
+		$scope.contacts.$add({
+
+			name: name,
+			email: email,
+			company: company,
+			phones: [
+				{
+					mobile: mobile_phone,
+					work: work_phone,
+					home: home_phone
+				}
+			],
+			address: [
+				{ 
+					street: street_address,
+					city: city,
+					state: state,
+					zip: zip
+				}
+
+			]
+		}).then(function(ref){
+			var id = ref.key();
+			console.log('Added contact with id: ' + id);
+
+			//custom method to hide the fields
+			$scope.clearFields();
+
+			//hide the form
+			$scope.addFormShow = false;
+
+			//send message
+			$scope.msg = "Contact Added"
+		});
+
+	}
+
 }]);
