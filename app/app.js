@@ -2,7 +2,9 @@
 
 // Declare app level module which depends on views, and components
 angular.module('myContactsApp', [
-  'ngRoute'
+  'ngRoute', 
+  'firebase',
+  'myContactsApp.contacts'
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/contacts'});
