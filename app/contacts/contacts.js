@@ -19,11 +19,29 @@ angular.module('myContactsApp.contacts', ['ngRoute', 'firebase'])
 		$scope.addFormShow = true;
 	}
 
-	$scope.hide = function(){
-		$scope.addFormShow = false;
+	$scope.showEditForm = function(contact){
+		$scope.editFormShow = true;
+
+		$scope.id = contact.$id;
+		$scope.name = contact.name;
+		$scope.email = contact.email; 
+		$scope.company = contact.company;
+		$scope.work_phone = contact.phones[0].work;
+		$scope.mobile_phone = contact.phones[0].mobile;
+		$scope.home_phone = contact.phones[0].home;
+		$scope.street_address = contact.address[0].street;
+		$scope.city = contact.address[0].city;
+		$scope.state = contact.address[0].state;
+		$scope.zip = contact.address[0].zip;
+
 	}
 
-	$scope.clearFields = function(){
+	$scope.hide = function(){
+		$scope.addFormShow = false;
+		$scope.contactShow = false;
+	}
+
+	function clearFields(){
 
 		$scope.name = "";
 		$scope.email = ""; 
@@ -90,6 +108,46 @@ angular.module('myContactsApp.contacts', ['ngRoute', 'firebase'])
 
 	}
 
+	$scope.editFormSubmit = function(){
+		console.log('Updating contact...');
+
+		//GET ID
+		var id = $scope.id;
+		console.log("id:" + id);
+
+		//get record
+
+		var record = $scope.contacts.$getRecord(id);
+
+		//assign values to the record
+		record.name = $scope.name;
+		record.email = $scope.email; 
+		record.company = $scope.company;
+		record.phones[0].work = $scope.work_phone;
+		record.phones[0].mobilee = $scope.mobile_phone;
+		record.phones[0].home = $scope.home_phone;
+		record.address[0].street = $scope.street_address;
+		record.address[0].city = $scope.city;
+		record.address[0].state = $scope.state;
+		record.address[0].zip = $scope.zip;
+
+		//save the record on firebase
+		$scope.contacts.$save(record).then(function(ref){
+			console.log(ref.key);
+		});
+
+		clearFields();
+
+		//hide the edit form
+		$scope.editFormShow = false;
+		//hide the contact info table
+		$scope.contactShow = false;
+
+		//send message
+		$scope.msg = "Contact Updated"
+
+	}
+
 	$scope.showContact = function(contact){
 
 		console.log('getting contact...');
@@ -107,5 +165,14 @@ angular.module('myContactsApp.contacts', ['ngRoute', 'firebase'])
 		$scope.contactShow = true;
 
 	}
+
+	$scope.removeContact = function(contact){
+		console.log("removing contact...");
+
+		$scope.contacts.$remove(contact);
+
+		$scope.msg = "contact removed";
+	}
+
 
 }]);
