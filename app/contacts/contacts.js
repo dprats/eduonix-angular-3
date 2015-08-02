@@ -90,4 +90,22 @@ angular.module('myContactsApp.contacts', ['ngRoute', 'firebase'])
 
 	}
 
+	$scope.showContact = function(contact){
+
+		console.log('getting contact...');
+		$scope.name = contact.name;
+		$scope.company = contact.company;
+		$scope.email = contact.email;
+		$scope.work_phone = contact.phones[0].work;
+		$scope.home_phone = contact.phones[0].home;
+		$scope.mobile_phone = contact.phones[0].mobile;
+		$scope.street = contact.address[0].street;
+		$scope.city = contact.address[0].city;
+		$scope.state = contact.address[0].state;
+		$scope.zip = contact.address[0].zip;
+
+		$scope.contactShow = true;
+
+	}
+
 }]);
